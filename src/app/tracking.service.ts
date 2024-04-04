@@ -3,14 +3,10 @@
 /* eslint-disable dot-notation */
 /* eslint-disable no-console */
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { ethers } from 'ethers';
 import { EthereumService } from './ethereum.service';
 import { ContractService } from './contract.service';
-
-// INTERNAL IMPORT
-import tracking from '../assets/Tracking.json';
 
 interface ShipmentData {
   sender: string;
@@ -27,38 +23,12 @@ interface ShipmentData {
   providedIn: 'root',
 })
 export class TrackingService {
-  private currentUserSubject = new BehaviorSubject<string | null>(null);
-
-  currentUser$ = this.currentUserSubject.asObservable();
-
   readonly DappName = 'Product Tracking Dapp';
-
-  ContractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
-
-  ContractABI = tracking.abi;
 
   constructor(
     private ethereumService: EthereumService,
     private contractService: ContractService,
-  ) {
-    this.ethereumService.signer.subscribe((signer) => {
-      if (signer) {
-        this.connectWallet();
-      } else {
-        this.currentUserSubject.next(null);
-      }
-    });
-  }
-
-  async connectWallet() {
-    try {
-      await this.ethereumService.connectToMetaMaskWallet();
-      const address = await this.ethereumService.getSigner()?.getAddress();
-      this.currentUserSubject.next(address || null);
-    } catch (error) {
-      console.error('Error connecting to MetaMask:', error);
-    }
-  }
+  ) {}
 
   async createShipment(items: any) {
     if (!this.contractService.contract) {

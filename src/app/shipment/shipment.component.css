@@ -1,0 +1,25 @@
+/* Overall container */
+.image-grid {
+  width: 90vw;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Image containers */
+.image-container {
+  width: 33%;
+  margin-bottom: 1.5em;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Images */
+.image-container img {
+  width: 100%;
+  border-radius: 2em;
+  transition: transform 0.2s;
+}
+
+/* Hover effect */
+.image-container img:hover {
+  transform: scale(1.03);
+}
