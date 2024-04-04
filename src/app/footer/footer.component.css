@@ -1,0 +1,37 @@
+footer {
+  background-color: #f0f0f0; /* Light gray background */
+  padding: 20px;
+  text-align: center;
+}
+
+.footer-container {
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.copyright {
+  font-size: 14px;
+  color: #666; /* Darker gray text */
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-links li {
+  display: inline-block;
+  margin-left: 15px;
+}
+
+.footer-links a {
+  color: #333;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
