@@ -13,9 +13,7 @@ declare let window: any;
 export class EthereumService {
   private provider: ethers.BrowserProvider | undefined;
 
-  private signer: BehaviorSubject<ethers.JsonRpcSigner | undefined> = new BehaviorSubject<
-    ethers.JsonRpcSigner | undefined
-  >(undefined);
+  public signer = new BehaviorSubject<ethers.JsonRpcSigner | undefined>(undefined);
 
   constructor(private ngZone: NgZone) {
     if (typeof window.ethereum !== 'undefined') {
@@ -54,7 +52,9 @@ export class EthereumService {
   async connectToMetaMaskWallet() {
     if (typeof window.ethereum !== 'undefined') {
       // Request access to the user's MetaMask account
-      await window.ethereum.request({ method: 'eth_requestAccounts' });
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+
+      if (accounts.length === 0) throw new Error('No accounts found.');
 
       // Connect to MetaMask using the Web3Provider
       this.provider = new ethers.BrowserProvider(window.ethereum);

@@ -69,8 +69,13 @@ contract Tracking {
         return (shipment.sender, shipment.receiver, shipment.pickupTime, shipment.deliveryTime, shipment.distance, shipment.price, shipment.status, shipment.isPaid);
     }
 
-    function getShipmentsCount(address _sender) external view returns (uint256) {
+    function getShipmentsCount(address _sender) external  view returns (uint256) {
         return shipments[_sender].length;
     }
+    
+    function getAllTransactionsForSender(address _sender) external view returns (Shipment[] memory) {
+    return shipments[_sender];
+}
+    
 }
 
