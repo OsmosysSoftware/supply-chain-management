@@ -8,10 +8,9 @@ describe('TrackingComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TrackingComponent]
-    })
-    .compileComponents();
-    
+      imports: [TrackingComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(TrackingComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
