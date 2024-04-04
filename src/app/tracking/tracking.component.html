@@ -1,0 +1,42 @@
+<div class="max-w-screen-xl mx-auto px-4 md:px-8">
+  <h1 class="text-gray-800 text-xl font-bold sm:text-2xl">Shipment Tracking</h1>
+
+  <div class="mt-12 shadow-sm border rounded-lg overflow-x-auto">
+    <table class="w-full table-auto text-sm text-left">
+      <thead class="bg-gray-50 text-gray-600 font-medium border-b">
+        <tr>
+          <th class="py-3 px-6">Sender</th>
+          <th class="py-3 px-6">Recevier</th>
+          <th class="py-3 px-6">Pickup Time</th>
+          <th class="py-3 px-6">Distance</th>
+          <th class="py-3 px-6">Price</th>
+          <th class="py-3 px-6">Delivery Time</th>
+          <th class="py-3 px-6">Paid</th>
+          <th class="py-3 px-6">Status</th>
+        </tr>
+      </thead>
+      <tbody class="text-gray-600 divide-y">
+        <tr *ngFor="let shipment of shipments; let idx = index">
+          <td class="px-6 py-4 whitespace-nowrap">{{ shipment.sender.slice(0, 15) }}...</td>
+          <td class="px-6 py-4 whitespace-nowrap">{{ shipment.receiver.slice(0, 15) }}...</td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            {{ shipment.pickupTime | date: 'medium' }}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">{{ shipment.distance }} Km</td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            {{ shipment.price }}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            {{ shipment.deliveryTime }}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            {{ shipment.isPaid ? 'Completed' : 'Not Complete' }}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            {{ shipment.status | shipmentStatus }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
