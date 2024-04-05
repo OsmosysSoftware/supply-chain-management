@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnInit, TemplateRef, inject } from '@angular/core';
 // eslint-disable-next-line import/no-extraneous-dependencies
