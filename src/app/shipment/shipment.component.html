@@ -1,25 +1,120 @@
 <div class="image-grid">
   <div style="display: flex; justify-content: space-around">
-    <div class="image-container">
-      <img src="../../assets/Images/1.jpg" alt="Image 1 Description" />
+    <div class="image-container" (click)="open('name')">
+      <img src="../../assets/Images/4.jpg" alt="start shipment" />
     </div>
-    <div class="image-container" style="margin: 0 30px">
-      <img src="../../assets/Images/2.jpg" alt="Image 2 Description" />
+    <div class="image-container" (click)="open('id')" style="margin: 0 30px">
+      <img src="../../assets/Images/2.jpg" alt="get shipment" />
     </div>
-    <div class="image-container">
-      <img src="../../assets/Images/3.jpg" alt="Image 3 Description" />
+    <div class="image-container" (click)="open('receiverAddress')">
+      <img src="../../assets/Images/3.jpg" alt="complete shipment" />
     </div>
-  </div>
-
-  <div style="display: flex; justify-content: space-around; margin-top: 2em">
-    <div class="image-container">
-      <img src="../../assets/Images/4.jpg" alt="Image 4 Description" />
-    </div>
-    <div class="image-container" style="margin: 0 30px">
-      <img src="../../assets/Images/5.jpg" alt="Image 5 Description" />
-    </div>
-    <div class="image-container">
-      <img src="../../assets/Images/6.jpg" alt="Image 6 Description" />
+    <div class="image-container" (click)="open('user')" style="margin: 0 30px">
+      <img src="../../assets/Images/5.jpg" alt="user profile" />
     </div>
   </div>
 </div>
+
+<ng-template #profileModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">User Profile</h4>
+    <button
+      type="button"
+      class="btn-close"
+      (click)="modal.dismiss('Cross click')"
+      aria-label="Close"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <img src="../../assets/Images/creator9.png" class="rounded-circle mx-auto d-block" />
+    <div class="d-flex justify-content-around">
+      <p class="border border-secondary rounded p-2 m-2">User Balance: $150.00</p>
+      <p class="border border-secondary rounded p-2 m-2">Total Shipments: 25</p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Close click')">
+      Close
+    </button>
+  </div>
+</ng-template>
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Start shipment</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="mb-3">
+        <label for="receiverAddress">Receiver Address</label>
+        <input type="text" class="form-control" id="receiverAddress" placeholder="Enter Address" />
+      </div>
+      <div class="mb-3">
+        <label for="id">ID</label>
+        <input type="text" class="form-control" id="id" placeholder="Enter ID" />
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">
+      Save
+    </button>
+  </div>
+</ng-template>
+<ng-template #contentId let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Get Shipment</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="mb-3">
+        <label for="id">ID</label>
+        <input type="text" class="form-control" id="id" placeholder="Enter ID" />
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">
+      Save
+    </button>
+  </div>
+</ng-template>
+<ng-template #contentReceiverAddress let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Complete shipment</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="mb-3">
+        <label for="receiverAddress">Receiver Address</label>
+        <input type="text" class="form-control" id="receiverAddress" placeholder="Enter Address" />
+      </div>
+      <div class="mb-3">
+        <label for="id">ID</label>
+        <input type="text" class="form-control" id="id" placeholder="Enter ID" />
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">
+      Save
+    </button>
+  </div>
+</ng-template>

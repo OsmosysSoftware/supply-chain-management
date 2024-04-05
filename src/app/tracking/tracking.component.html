@@ -1,42 +1,77 @@
 <div class="max-w-screen-xl mx-auto px-4 md:px-8">
   <h1 class="text-gray-800 text-xl font-bold sm:text-2xl">Shipment Tracking</h1>
 
-  <div class="mt-12 shadow-sm border rounded-lg overflow-x-auto">
-    <table class="w-full table-auto text-sm text-left">
-      <thead class="bg-gray-50 text-gray-600 font-medium border-b">
-        <tr>
-          <th class="py-3 px-6">Sender</th>
-          <th class="py-3 px-6">Recevier</th>
-          <th class="py-3 px-6">Pickup Time</th>
-          <th class="py-3 px-6">Distance</th>
-          <th class="py-3 px-6">Price</th>
-          <th class="py-3 px-6">Delivery Time</th>
-          <th class="py-3 px-6">Paid</th>
-          <th class="py-3 px-6">Status</th>
-        </tr>
-      </thead>
-      <tbody class="text-gray-600 divide-y">
-        <tr *ngFor="let shipment of shipments; let idx = index">
-          <td class="px-6 py-4 whitespace-nowrap">{{ shipment.sender.slice(0, 15) }}...</td>
-          <td class="px-6 py-4 whitespace-nowrap">{{ shipment.receiver.slice(0, 15) }}...</td>
-          <td class="px-6 py-4 whitespace-nowrap">
-            {{ shipment.pickupTime | date: 'medium' }}
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap">{{ shipment.distance }} Km</td>
-          <td class="px-6 py-4 whitespace-nowrap">
-            {{ shipment.price }}
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap">
-            {{ shipment.deliveryTime }}
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap">
-            {{ shipment.isPaid ? 'Completed' : 'Not Complete' }}
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap">
-            {{ shipment.status | shipmentStatus }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Create Shipment</h4>
+      <button
+        type="button"
+        class="btn-close"
+        aria-label="Close"
+        (click)="modal.dismiss('Cross click')"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="shipmentForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="receiver">Receiver</label>
+          <input type="text" class="form-control" id="receiver" formControlName="receiver" />
+        </div>
+        <div class="mb-3">
+          <label for="pickupTime">Date</label>
+          <input type="date" class="form-control" id="pickupTime" formControlName="pickupTime" />
+        </div>
+        <div class="mb-3">
+          <label for="distance">Distance (Km)</label>
+          <input type="number" class="form-control" id="distance" formControlName="distance" />
+        </div>
+        <div class="mb-3">
+          <label for="price">Price</label>
+          <input type="number" class="form-control" id="price" formControlName="price" />
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </ng-template>
+  <div className="mt-4 flex flex-col items-center">
+    <button class="btn btn-primary mb-3" (click)="open(content)">Add Tracking</button>
+    <div class="mt-12 shadow-sm border rounded-lg overflow-x-auto">
+      <table class="table table-bordered table-hover table-striped">
+        <thead class="bg-primary text-white font-medium table-header-emphasis">
+          <tr>
+            <th class="p-3">Sender</th>
+            <th class="p-3">Recevier</th>
+            <th class="p-3">Pickup Time</th>
+            <th class="p-3">Distance</th>
+            <th class="p-3">Price</th>
+            <th class="p-3">Delivery Time</th>
+            <th class="p-3">Paid</th>
+            <th class="p-3">Status</th>
+          </tr>
+        </thead>
+        <tbody class="text-gray-600">
+          <tr *ngFor="let shipment of shipments; let idx = index">
+            <td class="p-3 whitespace-nowrap">{{ shipment.sender.slice(0, 15) }}...</td>
+            <td class="p-3 whitespace-nowrap">{{ shipment.receiver.slice(0, 15) }}...</td>
+            <td class="p-3 whitespace-nowrap">
+              {{ shipment.pickupTime | date: 'medium' }}
+            </td>
+            <td class="p-3 whitespace-nowrap">{{ shipment.distance }} Km</td>
+            <td class="p-3 whitespace-nowrap">
+              {{ shipment.price }}
+            </td>
+            <td class="p-3 whitespace-nowrap">
+              {{ shipment.deliveryTime }}
+            </td>
+            <td class="p-3 whitespace-nowrap">
+              {{ shipment.isPaid ? 'Completed' : 'Not Complete' }}
+            </td>
+            <td class="p-3 whitespace-nowrap">
+              {{ shipment.status | shipmentStatus }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
