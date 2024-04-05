@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-/* eslint-disable no-console */
 /* eslint-disable dot-notation */
 /* eslint-disable import/no-extraneous-dependencies */
 import { ethers } from 'ethers';
@@ -28,8 +27,6 @@ export class TrackingService {
   ContractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
 
   ContractABI = tracking.abi;
-
-  private contract: ethers.Contract | undefined; // Private variable
 
   constructor(
     private ethereumService: EthereumService,
