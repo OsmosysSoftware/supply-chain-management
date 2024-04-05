@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+/* eslint-disable no-console */
 /* eslint-disable dot-notation */
 /* eslint-disable import/no-extraneous-dependencies */
 import { ethers } from 'ethers';
