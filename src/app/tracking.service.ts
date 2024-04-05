@@ -1,13 +1,11 @@
-/* eslint-disable consistent-return */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable dot-notation */
 /* eslint-disable no-console */
-import { Injectable } from '@angular/core';
-// eslint-disable-next-line import/no-extraneous-dependencies
+/* eslint-disable dot-notation */
+/* eslint-disable import/no-extraneous-dependencies */
 import { ethers } from 'ethers';
+import { Injectable } from '@angular/core';
 import { EthereumService } from './ethereum.service';
 
-interface ShipmentData {
+export interface ShipmentData {
   sender: string;
   receiver: string;
   price: string;
@@ -30,7 +28,7 @@ export class TrackingService {
     this.contract = this.ethereumService.getContract(); // Initialize on creation
   }
 
-  async createShipment(items: any) {
+  async createShipment(items: ShipmentData) {
     if (!this.contract) {
       console.error('Contract not initialized!');
       return;
@@ -62,14 +60,14 @@ export class TrackingService {
       const shipments = await this.contract['getAllTransactionsForSender']();
       return shipments.map(
         (shipment: {
-          sender: any;
-          receiver: any;
+          sender: string;
+          receiver: string;
           price: { toString: () => ethers.BigNumberish };
-          pickupTime: { toNumber: () => any };
-          deliveryTime: { toNumber: () => any };
-          distance: { toNumber: () => any };
-          isPaid: any;
-          status: any;
+          pickupTime: { toNumber: () => number };
+          deliveryTime: { toNumber: () => number };
+          distance: { toNumber: () => number };
+          isPaid: boolean;
+          status: number;
         }) => ({
           sender: shipment.sender,
           receiver: shipment.receiver,
