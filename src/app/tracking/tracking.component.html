@@ -1,5 +1,81 @@
 <div class="max-w-screen-xl mx-auto px-4 md:px-8">
   <h1 class="text-gray-800 text-xl font-bold sm:text-2xl">Shipment Tracking</h1>
+  <button (click)="toggleForm()" class="btn btn-primary">Add Tracking</button>
+
+  <div id="trackingModal" class="modal fade" tabindex="-1" *ngIf="showForm">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Tracking</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            (click)="toggleForm()"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form *ngIf="showForm" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+              <label for="receiver">Receiver</label>
+              <input
+                type="text"
+                class="form-control"
+                id="receiver"
+                [(ngModel)]="newShipmentData.receiver"
+                name="receiver"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="price">Price</label>
+              <input
+                type="number"
+                class="form-control"
+                id="price"
+                [(ngModel)]="newShipmentData.price"
+                name="price"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="pickupTime">Pickup Time</label>
+              <input
+                type="datetime-local"
+                class="form-control"
+                id="pickupTime"
+                [(ngModel)]="newShipmentData.pickupTime"
+                name="pickupTime"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="distance">Distance</label>
+              <input
+                type="number"
+                class="form-control"
+                id="distance"
+                [(ngModel)]="newShipmentData.distance"
+                name="distance"
+                required
+              />
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+            (click)="toggleForm()"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="mt-12 shadow-sm border rounded-lg overflow-x-auto">
     <table class="w-full table-auto text-sm text-left">

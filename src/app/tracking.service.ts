@@ -8,7 +8,7 @@ import { ethers } from 'ethers';
 import { EthereumService } from './ethereum.service';
 import { ContractService } from './contract.service';
 
-interface ShipmentData {
+export interface ShipmentData {
   sender: string;
   receiver: string;
   price: string;
