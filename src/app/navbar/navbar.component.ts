@@ -21,6 +21,6 @@ export class NavbarComponent implements OnInit {
   }
 
   async connectWallet() {
-    await this.ethereumService.connectToMetaMaskWallet(); // Updated to use connectToMetaMaskWallet
+    await this.ethereumService.connectToMetaMaskWallet();
   }
 }
