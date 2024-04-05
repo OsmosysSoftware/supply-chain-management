@@ -6,7 +6,6 @@ import { Injectable } from '@angular/core';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { ethers } from 'ethers';
 import { EthereumService } from './ethereum.service';
-import { ContractService } from './contract.service';
 
 interface ShipmentData {
   sender: string;
@@ -25,20 +24,21 @@ interface ShipmentData {
 export class TrackingService {
   readonly DappName = 'Product Tracking Dapp';
 
-  constructor(
-    private ethereumService: EthereumService,
-    private contractService: ContractService,
-  ) {}
+  private contract: ethers.Contract | undefined; // Private variable
+
+  constructor(private ethereumService: EthereumService) {
+    this.contract = this.ethereumService.getContract(); // Initialize on creation
+  }
 
   async createShipment(items: any) {
-    if (!this.contractService.contract) {
+    if (!this.contract) {
       console.error('Contract not initialized!');
       return;
     }
 
     try {
       const { receiver, pickupTime, distance, price } = items;
-      const tx = await this.contractService.contract['createShipment'](
+      const tx = await this.contract['createShipment'](
         receiver,
         new Date(pickupTime).getTime(),
         distance,
@@ -54,12 +54,12 @@ export class TrackingService {
 
   async getAllShipment(): Promise<ShipmentData[]> {
     try {
-      if (!this.contractService.contract) {
+      if (!this.contract) {
         console.error('Contract not initialized!');
         return [];
       }
 
-      const shipments = await this.contractService.contract['getAllTransactionsForSender']();
+      const shipments = await this.contract['getAllTransactionsForSender']();
       return shipments.map(
         (shipment: {
           sender: any;
@@ -88,14 +88,18 @@ export class TrackingService {
   }
 
   async getShipmentsCount(): Promise<number> {
+    if (!this.contract) {
+      console.error('Contract not initialized!');
+      return 0;
+    }
+
     try {
-      if (!this.ethereumService.getSigner()) return 0;
+      const signer = this.ethereumService.getSigner();
 
-      const address = await this.ethereumService.getSigner()?.getAddress();
+      if (!signer) return 0;
 
-      if (!address || !this.contractService.contract) return 0;
-
-      const count = await this.contractService.contract['getShipmentsCount'](address);
+      const address = await signer.getAddress();
+      const count = await this.contract['getShipmentsCount'](address);
       return count.toNumber();
     } catch (error) {
       console.error('error getting shipments count', error);
@@ -104,13 +108,18 @@ export class TrackingService {
   }
 
   async completeShipment(receiver: string, index: number) {
+    if (!this.contract) {
+      console.error('Contract not initialized!');
+      return;
+    }
+
     try {
-      if (!this.ethereumService.getSigner()) throw new Error('Not connected to MetaMask');
+      const signer = this.ethereumService.getSigner();
 
-      if (!this.contractService.contract) throw new Error('Contract not initialized');
+      if (!signer) throw new Error('Not connected to MetaMask');
 
-      const tx = await this.contractService.contract['completeShipment'](
-        await this.ethereumService.getSigner()?.getAddress(),
+      const tx = await this.contract['completeShipment'](
+        await signer.getAddress(),
         receiver,
         index,
         { gasLimit: 300000 },
@@ -123,45 +132,48 @@ export class TrackingService {
   }
 
   async getShipment(index: number): Promise<ShipmentData | undefined> {
+    if (!this.contract) {
+      console.error('Contract not initialized!');
+      return undefined;
+    }
+
     try {
-      if (!this.ethereumService.getSigner()) throw new Error('Not connected to MetaMask');
+      const signer = this.ethereumService.getSigner();
 
-      if (!this.contractService.contract) throw new Error('Contract not initialized');
+      if (!signer) throw new Error('Not connected to MetaMask');
 
-      const address = await this.ethereumService.getSigner()?.getAddress();
-
-      if (!address) return;
-
-      const shipment = await this.contractService.contract['getShipment'](address, index);
-      // eslint-disable-next-line consistent-return
+      const address = await signer.getAddress();
+      const shipment = await this.contract['getShipment'](address, index);
       return {
         sender: shipment[0],
         receiver: shipment[1],
         pickupTime: shipment[2].toNumber(),
         deliveryTime: shipment[3].toNumber(),
         distance: shipment[4].toNumber(),
-        price: ethers.formatEther(shipment[5].toString()),
+        price: ethers.formatEther(shipment[5].toString()), // Using ethers.utils
         status: shipment[6],
         isPaid: shipment[7],
       };
     } catch (error) {
       console.error('error getting shipment', error);
-      return undefined; // Return undefined on error
+      return undefined;
     }
   }
 
   async startShipment(receiver: string, index: number) {
+    if (!this.contract) {
+      console.error('Contract not initialized!');
+      return;
+    }
+
     try {
-      if (!this.ethereumService.getSigner()) throw new Error('Not connected to MetaMask');
+      const signer = this.ethereumService.getSigner();
 
-      if (!this.contractService.contract) throw new Error('Contract not initialized');
+      if (!signer) throw new Error('Not connected to MetaMask');
 
-      const tx = await this.contractService.contract['startShipment'](
-        await this.ethereumService.getSigner()?.getAddress(),
-        receiver,
-        index,
-        { gasLimit: 300000 },
-      );
+      const tx = await this.contract['startShipment'](await signer.getAddress(), receiver, index, {
+        gasLimit: 300000,
+      });
       await tx.wait();
       console.log('Shipment started:', tx);
     } catch (error) {
