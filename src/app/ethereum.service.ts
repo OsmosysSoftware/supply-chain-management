@@ -3,7 +3,6 @@ import { Injectable, NgZone } from '@angular/core';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { ethers } from 'ethers';
 import { BehaviorSubject } from 'rxjs';
-import tracking from '../assets/Tracking.json';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare let window: any;
@@ -14,26 +13,23 @@ declare let window: any;
 export class EthereumService {
   private provider: ethers.BrowserProvider | undefined;
 
-  public signer = new BehaviorSubject<ethers.JsonRpcSigner | undefined>(undefined);
+  private signer = new BehaviorSubject<ethers.JsonRpcSigner | null>(null);
 
   private currentUserSubject = new BehaviorSubject<string | null>(null);
-
-  private contract: ethers.Contract | undefined;
-
-  ContractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
-
-  ContractABI = tracking.abi;
 
   public currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(private ngZone: NgZone) {
     if (typeof window.ethereum !== 'undefined') {
       this.provider = new ethers.BrowserProvider(window.ethereum);
-      this.signer.next(this.getSigner());
-
-      if (this.signer.getValue()) {
-        this.initializeContract();
-      }
+      this.provider
+        .getSigner()
+        .then((signer) => {
+          this.signer.next(signer);
+        })
+        .catch((error) => {
+          console.error('Error getting signer:', error);
+        });
 
       // Listen for changes in MetaMask accounts
       window.ethereum.on('accountsChanged', (accounts: string[]) => {
@@ -55,13 +51,13 @@ export class EthereumService {
   private handleMetaMaskDisconnect() {
     console.log('MetaMask disconnected.');
     this.provider = undefined;
-    this.signer.next(undefined);
+    this.signer.next(null);
   }
 
-  private handleMetaMaskAccountsChanged(accounts: string[]) {
+  private async handleMetaMaskAccountsChanged(accounts: string[]) {
     console.log('MetaMask accounts changed:', accounts);
     this.provider = new ethers.BrowserProvider(window.ethereum);
-    this.signer.next(this.getSigner());
+    this.signer.next(await this.provider.getSigner());
     this.currentUserSubject.next(accounts[0] || null);
   }
 
@@ -74,7 +70,7 @@ export class EthereumService {
 
       // Connect to MetaMask using the Web3Provider
       this.provider = new ethers.BrowserProvider(window.ethereum);
-      this.signer.next(this.getSigner());
+      this.signer.next(await this.provider.getSigner());
 
       const address = await this.signer.getValue()?.getAddress();
 
@@ -85,26 +81,11 @@ export class EthereumService {
   }
 
   getSigner() {
+    console.log('Inside getSigner, value:', this.signer.getValue());
     return this.signer.getValue();
   }
 
   public updateCurrentUser(address: string | null) {
     this.currentUserSubject.next(address);
-  }
-
-  initializeContract() {
-    const signer = this.getSigner();
-
-    if (signer) {
-      this.contract = new ethers.Contract(this.ContractAddress, this.ContractABI, signer);
-    }
-  }
-
-  public getContract() {
-    if (!this.contract) {
-      this.initializeContract();
-    }
-
-    return this.contract;
   }
 }
