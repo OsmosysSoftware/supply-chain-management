@@ -16,36 +16,69 @@ contract Tracking {
     }
 
     mapping(address => Shipment[]) public shipments;
+    uint256 public shipmentCount;
+
+     struct TypeShipment {
+        address sender;
+        address receiver;
+        uint256 pickupTime;
+        uint256 deliveryTime;
+        uint256 distance;
+        uint256 price;
+        ShipmentStatus status;
+        bool isPaid;
+    }
+
+    TypeShipment[] typeShipments;
     
     event ShipmentCreated(address indexed sender, address indexed receiver, uint256 pickupTime, uint256 distance, uint256 price);
     event ShipmentInTransit(address indexed sender, address indexed receiver, uint256 pickupTime);
     event ShipmentDelivered(address indexed sender, address indexed receiver, uint256 deliveryTime);
     event ShipmentPaid(address indexed sender, address indexed receiver, uint256 amount);
 
-    constructor() {}
+    constructor() {
+        shipmentCount = 0;
+    }
 
     function createShipment(address _receiver, uint256 _pickupTime, uint256 _distance, uint256 _price) external payable {
         require(msg.value == _price, "Payment amount must match the price.");
         
         Shipment memory shipment = Shipment(msg.sender, _receiver, _pickupTime, 0, _distance, _price, ShipmentStatus.PENDING, false);
         shipments[msg.sender].push(shipment);
+        shipmentCount++;
+
+         typeShipments.push(
+            TypeShipment(
+                msg.sender, 
+                _receiver, 
+                _pickupTime, 
+                0, 
+                _distance, 
+                _price, 
+                ShipmentStatus.PENDING, 
+                false
+            )
+        );
         
         emit ShipmentCreated(msg.sender, _receiver, _pickupTime, _distance, _price);
     }
 
-    function startShipment(address _receiver, uint256 _index) external {
-        Shipment storage shipment = shipments[msg.sender][_index];
-        
+    function startShipment(address _sender, address _receiver, uint256 _index) external {
+        Shipment storage shipment = shipments[_sender][_index];
+        TypeShipment storage typeShipment = typeShipments[_index];
+
         require(shipment.receiver == _receiver, "Invalid receiver.");
         require(shipment.status == ShipmentStatus.PENDING, "Shipment already in transit.");
 
         shipment.status = ShipmentStatus.IN_TRANSIT;
+        typeShipment.status = ShipmentStatus.IN_TRANSIT;
 
-        emit ShipmentInTransit(shipment.sender, _receiver, shipment.pickupTime);
+        emit ShipmentInTransit(_sender, _receiver, shipment.pickupTime);
     }
 
-    function completeShipment(address _receiver, uint256 _index) external {
-        Shipment storage shipment = shipments[msg.sender][_index];
+    function completeShipment(address _sender, address _receiver, uint256 _index) external {
+        Shipment storage shipment = shipments[_sender][_index];
+        TypeShipment storage typeShipment = typeShipments[_index];
 
         require(shipment.receiver == _receiver, "Invalid receiver.");
         require(shipment.status == ShipmentStatus.IN_TRANSIT, "Shipment not in transit.");
@@ -53,15 +86,18 @@ contract Tracking {
 
         shipment.status = ShipmentStatus.DELIVERED;
         shipment.deliveryTime = block.timestamp;
+        typeShipment.status = ShipmentStatus.DELIVERED;
+        typeShipment.deliveryTime = block.timestamp;
 
         uint256 amount = shipment.price;
 
         payable(shipment.sender).transfer(amount);
 
         shipment.isPaid = true;
+        typeShipment.isPaid = true;
 
-        emit ShipmentDelivered(shipment.sender, _receiver, shipment.deliveryTime);
-        emit ShipmentPaid(shipment.sender, _receiver, amount);
+        emit ShipmentDelivered(_sender, _receiver, shipment.deliveryTime);
+        emit ShipmentPaid(_sender, _receiver, amount);
     }
 
     function getShipment(address _sender, uint256 _index) external view returns (address, address, uint256, uint256, uint256, uint256, ShipmentStatus, bool) {
@@ -75,7 +111,12 @@ contract Tracking {
     
     function getAllTransactionsForSender(address _sender) external view returns (Shipment[] memory) {
     return shipments[_sender];
-}
+
+    }
+    function getAllTransactions() public view returns (TypeShipment[] memory)
+    {
+        return typeShipments;
+    }
     
 }
 

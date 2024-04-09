@@ -48,6 +48,9 @@ node_modules
 /cache
 /artifacts
 
+# Ignition files
+ignition/deployments
+
 # TypeChain files
 /typechain
 /typechain-types

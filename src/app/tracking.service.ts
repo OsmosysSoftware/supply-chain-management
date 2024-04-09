@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-console */
 /* eslint-disable dot-notation */
 /* eslint-disable import/no-extraneous-dependencies */
@@ -11,9 +12,9 @@ export interface ShipmentData {
   sender: string;
   receiver: string;
   price: string;
-  pickupTime: number;
-  deliveryTime: number;
-  distance: number;
+  pickupTime: any;
+  deliveryTime: any;
+  distance: any;
   isPaid: boolean;
   status: number;
 }
@@ -61,7 +62,7 @@ export class TrackingService {
     }
   }
 
-  async getAllShipment(): Promise<ShipmentData[]> {
+  async getAllShipment(): Promise<any[]> {
     try {
       const contract = this.fetchContract();
 
@@ -70,29 +71,27 @@ export class TrackingService {
         return [];
       }
 
-      const shipments = await contract['getAllTransactionsForSender']();
+      const signer = this.ethereumService.getSigner();
+
+      if (!signer) throw new Error('Not connected to MetaMask');
+
+      const address = await signer.getAddress(); // Get the connected user's address
+      console.log('address', address);
+      const shipments: any[] = await contract['getAllTransactions']();
+      console.log('Raw shipments data:', shipments); // Log the raw data
+
       // eslint-disable-next-line consistent-return
-      return shipments.map(
-        (shipment: {
-          sender: string;
-          receiver: string;
-          price: { toString: () => ethers.BigNumberish };
-          pickupTime: { toNumber: () => number };
-          deliveryTime: { toNumber: () => number };
-          distance: { toNumber: () => number };
-          isPaid: boolean;
-          status: number;
-        }) => ({
-          sender: shipment.sender,
-          receiver: shipment.receiver,
-          price: ethers.formatEther(shipment.price.toString()),
-          pickupTime: shipment.pickupTime.toNumber(),
-          deliveryTime: shipment.deliveryTime.toNumber(),
-          distance: shipment.distance.toNumber(),
-          isPaid: shipment.isPaid,
-          status: shipment.status,
-        }),
-      );
+      return shipments.map((shipment) => ({
+        // Remove unnecessary nested destructuring
+        sender: shipment.sender,
+        receiver: shipment.receiver,
+        price: ethers.formatEther(shipment.price.toString()),
+        pickupTime: new Date(Number(shipment.pickupTime)).toLocaleString(),
+        deliveryTime: new Date(Number(shipment.deliveryTime)).toLocaleString(),
+        distance: shipment.distance,
+        isPaid: shipment.isPaid,
+        status: shipment.status,
+      }));
     } catch (error) {
       console.error('error getting shipments', error);
       return [];
@@ -156,12 +155,13 @@ export class TrackingService {
 
       const address = await signer.getAddress();
       const shipment = await contract['getShipment'](address, index);
+      console.log('getting data from service', index, shipment);
       return {
         sender: shipment[0],
         receiver: shipment[1],
-        pickupTime: shipment[2].toNumber(),
-        deliveryTime: shipment[3].toNumber(),
-        distance: shipment[4].toNumber(),
+        pickupTime: shipment[2],
+        deliveryTime: shipment[3],
+        distance: shipment[4],
         price: ethers.formatEther(shipment[5].toString()), // Using ethers.utils
         status: shipment[6],
         isPaid: shipment[7],

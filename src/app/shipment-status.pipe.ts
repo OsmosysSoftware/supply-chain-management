@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({ name: 'shipmentStatus', standalone: true })
 export class ShipmentStatusPipe implements PipeTransform {
-  defaultStatus = 'Unknown';
+  defaultStatus = 'Pending';
 
   transform(status: number): string {
     switch (status) {

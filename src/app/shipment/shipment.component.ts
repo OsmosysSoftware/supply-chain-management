@@ -1,18 +1,25 @@
+/* eslint-disable prefer-destructuring */
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, OnInit, TemplateRef, inject, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { ShipmentData, TrackingService } from '../tracking.service';
 
 @Component({
   selector: 'app-shipment',
   standalone: true,
-  imports: [],
+  imports: [FormsModule, CommonModule],
   templateUrl: './shipment.component.html',
   styleUrl: './shipment.component.css',
 })
 export class ShipmentComponent implements OnInit {
-  private modalService = inject(NgbModal);
+  constructor(
+    private modalService: NgbModal,
+    private trackingService: TrackingService,
+  ) {}
 
   @ViewChild('content') content?: TemplateRef<any>; // Reference to the 'name' modal
 
@@ -23,6 +30,97 @@ export class ShipmentComponent implements OnInit {
   @ViewChild('profileModal') profileModal!: TemplateRef<any>;
 
   closeResult = '';
+
+  receiverAddress = '';
+
+  shipmentId = '';
+
+  shipmentData: ShipmentData | undefined;
+
+  submitShipment(modal: any) {
+    const index = Number(this.shipmentId); // Assuming ID is numerical
+    const receiverAddress = this.receiverAddress;
+    console.log('inside submit shipment');
+
+    // eslint-disable-next-line no-restricted-globals
+    if (isNaN(index)) {
+      console.error('Invalid ID format');
+      return;
+    }
+
+    if (!receiverAddress) {
+      console.error('Missing receiver address');
+      return;
+    }
+
+    this.trackingService
+      .startShipment(this.receiverAddress, index)
+      .then(() => {
+        console.log('Shipment started successfully!');
+        modal.close('Save click'); // Close modal on success
+      })
+      .catch((error) => {
+        console.error('Error starting shipment:', error);
+      });
+  }
+
+  completeShipment(modal: any) {
+    const index = Number(this.shipmentId); // Assuming ID is numerical
+    const receiverAddress = this.receiverAddress;
+
+    // eslint-disable-next-line no-restricted-globals
+    if (isNaN(index)) {
+      console.error('Invalid ID format');
+      return;
+    }
+
+    if (!receiverAddress) {
+      console.error('Missing receiver address');
+      return;
+    }
+
+    this.trackingService
+      .completeShipment(receiverAddress, index)
+      .then(() => {
+        console.log('Shipment completed successfully!');
+        modal.close('Save click'); // Close modal on success
+      })
+      .catch((error) => {
+        console.error('Error completing shipment:', error);
+      });
+  }
+
+  getShipment() {
+    const index = Number(this.shipmentId); // Assuming ID is numerical
+
+    // eslint-disable-next-line no-restricted-globals
+    if (isNaN(index)) {
+      console.error('Invalid ID format');
+      return;
+    }
+
+    this.trackingService
+      .getShipment(index)
+      .then((shipment) => {
+        if (shipment) {
+          console.log('Shipment data received in component:', shipment);
+          this.shipmentData = shipment;
+        } else {
+          console.error('Shipment not found');
+        }
+      })
+      .catch((error) => {
+        console.error('Error getting shipment:', error);
+      });
+  }
+
+  clearData() {
+    this.receiverAddress = '';
+
+    this.shipmentId = '';
+
+    this.shipmentData = undefined;
+  }
 
   // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method, class-methods-use-this
   ngOnInit() {}
@@ -50,6 +148,12 @@ export class ShipmentComponent implements OnInit {
       // Ensure the modal opened successfully
       modalRef.result.then((result) => {
         this.closeResult = `Closed with: ${result}`;
+      });
+    }
+
+    if (modalRef) {
+      modalRef.hidden.subscribe(() => {
+        this.clearData();
       });
     }
   }
