@@ -6,12 +6,11 @@ import { NgbDatepickerModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TrackingService, ShipmentData } from '../tracking.service';
-import { ShipmentStatusPipe } from '../shipment-status.pipe';
 
 @Component({
   selector: 'app-tracking',
   standalone: true,
-  imports: [NgbDatepickerModule, ReactiveFormsModule, CommonModule, ShipmentStatusPipe],
+  imports: [NgbDatepickerModule, ReactiveFormsModule, CommonModule],
   templateUrl: './tracking.component.html',
   styleUrls: ['./tracking.component.css'],
 })
@@ -30,9 +29,7 @@ export class TrackingComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.trackingService.getAllShipment().then((shipments: ShipmentData[]) => {
-      this.shipments = shipments;
-    });
+    this.getShipmentRecord();
     // Initialize the shipmentForm with appropriate validators
     this.shipmentForm = this.formBuilder.group({
       receiver: ['', Validators.required],
@@ -42,12 +39,31 @@ export class TrackingComponent implements OnInit {
     });
   }
 
+  getShipmentRecord() {
+    this.trackingService.getAllShipment().then((shipments: ShipmentData[]) => {
+      this.shipments = shipments;
+    });
+  }
+
   open(content: TemplateRef<any>) {
     this.modalService
       .open(content, { ariaLabelledBy: 'modal-basic-title' })
       .result.then((result) => {
         this.closeResult = `Closed with: ${result}`;
       });
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  getStatusLabel(status: bigint): string {
+    if (status === 0n) {
+      return 'Pending';
+    }
+
+    if (status === 1n) {
+      return 'IN_TRANSIT';
+    }
+
+    return 'Delivered';
   }
 
   onSubmit() {

@@ -67,7 +67,7 @@
               {{ shipment.isPaid ? 'Completed' : 'Not Complete' }}
             </td>
             <td class="p-3 whitespace-nowrap">
-              {{ shipment.status | shipmentStatus }}
+              {{ getStatusLabel(shipment.status) }}
             </td>
           </tr>
         </tbody>
