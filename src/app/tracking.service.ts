@@ -112,10 +112,37 @@ export class TrackingService {
 
       const address = await signer.getAddress();
       const count = await contract['getShipmentsCount'](address);
-      return count.toNumber();
+      return count;
     } catch (error) {
       console.error('error getting shipments count', error);
       return 0;
+    }
+  }
+
+  async getUserBalance(): Promise<string> {
+    try {
+      const signer = this.ethereumService.getSigner();
+
+      if (!signer) throw new Error('Not connected to MetaMask');
+
+      const contract = this.fetchContract();
+
+      if (!contract) {
+        console.error('Error fetching contract');
+        return '';
+      }
+
+      const balanceWei = await this.ethereumService.getBalance(await signer.getAddress());
+      console.log('balance', balanceWei);
+
+      if (balanceWei) {
+        return ethers.formatEther(balanceWei);
+      }
+
+      return '0';
+    } catch (error) {
+      console.error('error getting user balance', error);
+      return '0';
     }
   }
 

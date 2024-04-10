@@ -88,4 +88,8 @@ export class EthereumService {
   public updateCurrentUser(address: string | null) {
     this.currentUserSubject.next(address);
   }
+
+  public async getBalance(address: string): Promise<bigint | undefined> {
+    return this.provider?.getBalance(address);
+  }
 }

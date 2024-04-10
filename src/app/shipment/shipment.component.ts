@@ -35,6 +35,10 @@ export class ShipmentComponent implements OnInit {
 
   shipmentId = '';
 
+  userBalance!: string;
+
+  shipmentCount!: number;
+
   shipmentData: ShipmentData | undefined;
 
   submitShipment(modal: any) {
@@ -114,6 +118,11 @@ export class ShipmentComponent implements OnInit {
       });
   }
 
+  async getUserData() {
+    this.userBalance = await this.trackingService.getUserBalance();
+    this.shipmentCount = await this.trackingService.getShipmentsCount();
+  }
+
   clearData() {
     this.receiverAddress = '';
 
@@ -122,8 +131,16 @@ export class ShipmentComponent implements OnInit {
     this.shipmentData = undefined;
   }
 
+  async OpenUserProfile() {
+    this.userBalance = await this.trackingService.getUserBalance();
+    this.shipmentCount = await this.trackingService.getShipmentsCount();
+    this.modalService.open(this.profileModal);
+  }
+
   // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method, class-methods-use-this
-  ngOnInit() {}
+  ngOnInit() {
+    this.getUserData();
+  }
 
   open(modalType: string) {
     let modalRef;
@@ -138,7 +155,7 @@ export class ShipmentComponent implements OnInit {
         modalRef = this.modalService.open(this.contentReceiverAddress);
         break;
       case 'user':
-        modalRef = this.modalService.open(this.profileModal);
+        this.OpenUserProfile();
         break;
       default:
         console.error('Unknown modal type');
