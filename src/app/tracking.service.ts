@@ -40,6 +40,7 @@ export class TrackingService {
 
   async createShipment(items: ShipmentData) {
     try {
+      console.log(items);
       const { receiver, pickupTime, distance, price } = items;
       const contract = this.fetchContract();
 
@@ -71,12 +72,6 @@ export class TrackingService {
         return [];
       }
 
-      const signer = this.ethereumService.getSigner();
-
-      if (!signer) throw new Error('Not connected to MetaMask');
-
-      const address = await signer.getAddress(); // Get the connected user's address
-      console.log('address', address);
       const shipments: any[] = await contract['getAllTransactions']();
       console.log('Raw shipments data:', shipments); // Log the raw data
 
@@ -87,7 +82,7 @@ export class TrackingService {
         receiver: shipment.receiver,
         price: ethers.formatEther(shipment.price.toString()),
         pickupTime: new Date(Number(shipment.pickupTime)).toLocaleString(),
-        deliveryTime: new Date(Number(shipment.deliveryTime)).toLocaleString(),
+        deliveryTime: Number(shipment.deliveryTime),
         distance: shipment.distance,
         isPaid: shipment.isPaid,
         status: shipment.status,
@@ -148,6 +143,7 @@ export class TrackingService {
 
   async completeShipment(receiver: string, index: number) {
     try {
+      console.log('receiver:', receiver, 'index:', index);
       const signer = this.ethereumService.getSigner();
       const contract = this.fetchContract();
 

@@ -81,7 +81,6 @@ export class EthereumService {
   }
 
   getSigner() {
-    console.log('Inside getSigner, value:', this.signer.getValue());
     return this.signer.getValue();
   }
 

@@ -35,6 +35,8 @@
   </ng-template>
   <div className="mt-4 flex flex-col items-center">
     <button class="btn btn-primary mb-3" (click)="open(content)">Add Tracking</button>
+    <button class="btn btn-primary mb-3" (click)="getShipmentRecord()">Reload</button>
+
     <div class="mt-12 shadow-sm border rounded-lg overflow-x-auto">
       <table class="table table-bordered table-hover table-striped">
         <thead class="bg-primary text-white font-medium table-header-emphasis">

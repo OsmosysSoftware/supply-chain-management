@@ -17,7 +17,6 @@ export class ContractService {
     abi: ethers.Interface | ethers.InterfaceAbi,
   ): ethers.Contract | void {
     const signer = this.ethereumService.getSigner();
-    console.log('Inside contract service value of singer ', signer);
 
     if (!signer) {
       console.log('Need to be signed in to get contracts!');
@@ -25,7 +24,6 @@ export class ContractService {
     }
 
     this.contract = new ethers.Contract(address, abi, signer);
-    console.log('contract', this.contract);
 
     // eslint-disable-next-line consistent-return
     return this.contract;

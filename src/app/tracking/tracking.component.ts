@@ -15,9 +15,9 @@ import { TrackingService, ShipmentData } from '../tracking.service';
   styleUrls: ['./tracking.component.css'],
 })
 export class TrackingComponent implements OnInit {
-  shipments: ShipmentData[] = []; // Temporary - adjust based on your service
+  shipments: ShipmentData[] = [];
 
-  shipmentForm!: FormGroup; // Declare your form group
+  shipmentForm!: FormGroup;
 
   private modalService = inject(NgbModal);
 
@@ -67,20 +67,12 @@ export class TrackingComponent implements OnInit {
   }
 
   onSubmit() {
-    // Handle the form submission here
-    console.log(this.shipmentForm.value); // This will give you the form data
-
     if (this.shipmentForm.valid) {
-      // Check for basic form validity
-      const newShipment = this.shipmentForm.value;
-
-      // Use your service to send the data
       this.trackingService
-        .createShipment(newShipment)
+        .createShipment(this.shipmentForm.value)
         .then(() => {
-          // Update the list of shipments
-          this.ngOnInit(); // Re-fetch data to refresh the view
-          this.modalService.dismissAll(); // Close the modal
+          this.ngOnInit();
+          this.modalService.dismissAll();
         })
         .catch((error) => console.error(error));
     }
