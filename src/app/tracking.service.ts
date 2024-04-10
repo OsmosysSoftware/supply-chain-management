@@ -16,7 +16,7 @@ export interface ShipmentData {
   deliveryTime: any;
   distance: any;
   isPaid: boolean;
-  status: number;
+  status: any;
 }
 
 @Injectable({
