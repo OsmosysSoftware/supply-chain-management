@@ -1,0 +1,19 @@
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+}
+
+.navbar {
+  flex: 1 0 auto; /* Shorthand for flex-grow: 1; flex-shrink: 0; flex-basis: auto; */
+  width: 100%; /* Set an explicit width */
+}
+
+.service {
+  margin: 2em;
+}
+
+.width {
+  width: 100%;
+}

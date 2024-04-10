@@ -29,15 +29,19 @@ export class TrackingComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.trackingService.getAllShipment().then((shipments: ShipmentData[]) => {
-      this.shipments = shipments;
-    });
+    this.getShipmentRecord();
     // Initialize the shipmentForm with appropriate validators
     this.shipmentForm = this.formBuilder.group({
       receiver: ['', Validators.required],
       pickupTime: ['', Validators.required], // Add a validator for this too
       distance: ['', [Validators.required, Validators.min(0)]],
       price: ['', [Validators.required, Validators.min(0)]],
+    });
+  }
+
+  getShipmentRecord() {
+    this.trackingService.getAllShipment().then((shipments: ShipmentData[]) => {
+      this.shipments = shipments;
     });
   }
 
