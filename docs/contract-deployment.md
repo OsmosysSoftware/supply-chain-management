@@ -104,6 +104,7 @@ npx hardhat compile
    - Install MetaMask.
    - Switch to the Fantom testnet.
    - If Not present add the network with the following config
+     
      ![Fantom testnet](./Images/fantomTestnet.png)
    - Get testnet Ether from a faucet.
 
