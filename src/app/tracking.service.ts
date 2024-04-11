@@ -25,7 +25,8 @@ export interface ShipmentData {
 export class TrackingService {
   readonly DappName = 'Product Tracking Dapp';
 
-  ContractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
+  // use this address for local blockchain setup : 0x5FbDB2315678afecb367f032d93F642f64180aa3
+  ContractAddress = '0xF530cB5CD9B45D8D47E4B4dDda8742074C58bd02';
 
   ContractABI = tracking.abi;
 
