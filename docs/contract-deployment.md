@@ -104,9 +104,11 @@ npx hardhat compile
    - Install MetaMask.
    - Switch to the Fantom testnet.
    - If Not present add the network with the following config
-     
+
      ![Fantom testnet](./Images/fantomTestnet.png)
-   - Get testnet Ether from a faucet.
+
+   - Get testnet Ether from a faucet : [link](https://faucet.fantom.network/).
+   - You need to provide the wallet address to get test ether
 
 2. **Project configuration (`hardhat.config.js`):**
 
@@ -130,6 +132,7 @@ npx hardhat compile
    ```
 
    - Replace placeholders with your `provider url` and MetaMask `private key`.
+   - Create `.env` file taking reference from `.env.example` and provide the update values
 
 3. **Ignition File (same as before)**
 

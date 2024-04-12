@@ -50,6 +50,8 @@ Please make sure to have these versions installed on your development server bef
 
    make sure the hardhat node is running when you run this command
 
+   - For more details refer ![this](contract-deployment.md)
+
 6. Start the application
 
    ```sh
@@ -66,26 +68,27 @@ Please make sure to have these versions installed on your development server bef
    - Go to Network tab
    - Click on Add a network
    - Configure it as shown below
-     
+
      ![Network config](./Images/networkConfig.png)
 
 8. Switch to this localhost network
 
    - Your metamask should look like this
-     
+
      ![Localhost network](./Images/localhostNetwork.png)
 
 9. Connect to wallet
 
    - When you click on the connect wallet, metamask will open a pop like this
-     
+
      ![Connect Wallet](./Images/connectWallet.png)
+
    - Select the Imported Account and click Next
    - In the Next Step click on Connect
-     
+
      ![Connect Wallet](./Images/connectWallet2.png)
 
 10. Now you can interact with the application
     - The application will look like this
-      
+
       ![Application](./Images/app.png)
