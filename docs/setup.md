@@ -89,6 +89,29 @@ Please make sure to have these versions installed on your development server bef
      ![Connect Wallet](./Images/connectWallet2.png)
 
 10. Now you can interact with the application
+
     - The application will look like this
 
       ![Application](./Images/app.png)
+
+## Docker Setup
+
+To run the application using a Docker container, follow these steps. Assuming the smart contract is already deployed on a public blockchain testnet (in this case, Fantom testnet):
+
+### 1. Update Environment Variables
+
+Update the environment variables by referring to the `env.example` file. Ensure necessary configurations are correctly set for the application to interact with the deployed smart contract.
+
+### 2. Run Docker Compose
+
+Execute the following command to start the application using Docker Compose:
+
+```sh
+docker-compose -f docker-compose.yml up
+```
+
+### 3. Access the Application
+
+Once the Docker containers are up and running, you can access the application at: [http://localhost:5000/](http://localhost:5000/)
+
+Now, the application should be ready for use within the Docker environment.
