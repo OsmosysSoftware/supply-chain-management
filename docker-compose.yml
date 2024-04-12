@@ -1,0 +1,11 @@
+services:
+  angular-docker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_NAME: ${APP_NAME}
+    image: frontend-image
+    container_name: frontend
+    ports:
+      - '127.0.0.1:${SERVER_PORT}:80'
