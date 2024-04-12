@@ -50,7 +50,7 @@ Please make sure to have these versions installed on your development server bef
 
    make sure the hardhat node is running when you run this command
 
-   - For more details refer ![this](contract-deployment.md)
+   - For more details refer [this](contract-deployment.md)
 
 6. Start the application
 
