@@ -1,11 +1,11 @@
 services:
-  angular-docker:
+  osmosys-blockchain-demo-supply-chain-portal:
     build:
       context: .
       dockerfile: Dockerfile
       args:
         APP_NAME: ${APP_NAME}
-    image: frontend-image
-    container_name: frontend
+    image: osmosys-blockchain-demo-supply-chain-portal
+    container_name: osmosys-blockchain-demo-supply-chain-portal
     ports:
       - '127.0.0.1:${SERVER_PORT}:80'
